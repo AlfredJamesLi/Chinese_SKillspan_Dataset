@@ -23,7 +23,7 @@
 | 21 | 工具/语言用于完成任务→S；*Using tools/languages to do → S*                 | “使用Python部署模型”(S)；“以英文撰写报告”→“英语”(L)+“撰写报告”(S)。                                     |
 | 22 | 标准本体=K；按标准执行=S；*Standard entity=K; executing=S*                 | “了解ISO 9001”(K)；“按ISO 9001审核”(S)。 *Map by role.*                                   |
 | 23 | 拆分不得改变原意或致歧义；*Splits must preserve meaning*                     | 拆后“市场”变模糊→不要拆。 *If “market” becomes ambiguous → keep whole.*                       |
-| 24 | 标注顺序：L→S→K/T；*Order: L → S → K/T*                               | 先语言，再职责，再区分知识/软素质。 *Prioritize L, then S, then K/T.*                               |
+| 24 | 标注顺序：L→S→K → T；*Order: L → S → K → T*                               | 先语言，再职责，再区分知识/软素质。 *Prioritize L, then S, then K/T.*                               |
 | 25 | 自检：无重叠/无嵌套；*Check: no overlap/nesting*                          | 检查相邻跨度边界。 *Verify boundaries.*                                                     |
 | 26 | 自检：禁把职责拆成名词堆；*Check: no noun-scrap splitting*                   | “统筹A、B、C”勿拆成A/B/C。 *Do not split into bare nouns.*                                 |
 | 27 | 自检：防S被误切成K；*Check: avoid turning S into K*                      | 参见例1/2。 *See Ex. 16/17.*                                                           |
