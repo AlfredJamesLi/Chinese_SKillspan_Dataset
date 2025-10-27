@@ -1,118 +1,33 @@
-##Doccano 标注员手册（v1.3.6 平面标注版｜给标注员）
+| 规则 Rule | 描述 Description                                                      | 例子 Example                                                                         |
+| -- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| 1  | 不嵌套；*No nesting*                                                | 错误：在“数据分析”中再标“分析”。 *Wrong: label “analysis” inside “data analysis”.*               |
+| 2  | 不重叠；*No overlap*                                                | 错误：两个跨度共享字符。 *Wrong: two spans share characters.*                                  |
+| 3  | 平面标注，多跨度但互不包含；*Flat, multiple disjoint spans*                   | 一句话提取多个连续、不重叠片段。 *Multiple disjoint contiguous spans from one sentence.*           |
+| 4  | 跨度必须原文连续；禁止拼接；*Contiguous only; no fabrication*                 | 禁止复制动词去补名词碎片。 *Do not duplicate verbs to attach to noun scraps.*                   |
+| 5  | 口号/愿景/礼貌语/岗位名/待遇等不标；*Slogans/titles/benefits unlabelled*        | “公司使命：改变世界”不标。 *“Our mission: change the world” → no label.*                       |
+| 6  | 笼统职责不单独成跨度；*Generic catch-alls not spans*                       | 只标后续具体动作/对象。 *Label the specific action/object only.*                              |
+| 7  | 无具体对象或动作则跳过；*Skip if no concrete action/object*                 | “负责相关工作”→跳过。 *“Responsible for related work” → skip.*                              |
+| 8  | 最小但语义充分；可去壳词；*Minimal yet self-contained; drop hedges*          | “具备较强的沟通协调能力”→“沟通协调能力”。 *“Strong communication” → “communication”.*                |
+| 9  | 禁剪残词；*No partial morphemes*                                     | 错：“统筹协”“项目落”。 *Wrong: “coordi-”, “-deliver”.*                                      |
+| 10 | 仅可“安全拆”；*Split only when safe*                                  | “英语”(L) 与 “邮件沟通”(S) 可拆。 *Split “English”(L) and “email communication”(S).*         |
+| 11 | 标签冲突先看语境；不行则 L>S>K>T；*Context first; fallback L>S>K>T*          | “按GMP执行质检”→S。 *“Inspect per GMP” → S.*                                             |
+| 12 | **K**：知识/标准/资格本体；*K: bodies/standards/qualifications*           | “GMP”“驾驶执照(英/欧)”。 *“GMP”, “driving licence (UK/EU)”.*                              |
+| 13 | **S**：执行/职责/用工具完成任务；*S: execution/tasks/tools*                  | “SQL抽取数据”。 *“Extract data with SQL”.*                                              |
+| 14 | **T**：通用素质；写成动作则判S；*T: soft skills; actional → S*               | “沟通协调能力”(T)；“沟通客户诉求并推进”(S)。 *“Communication”(T); “coordinate client requests”(S).* |
+| 15 | **L**：语言/等级/考试/证书；*L: language/level/tests/certs*               | “英语/CET-6/IELTS”。 *“English/CET-6/IELTS”.*                                         |
+| 16 | 例：统筹协调资源→整段S；*Example: coordinating resources → S*              | “统筹协调产品、市场、运营、商业化团队资源”(S)。 *Keep whole span as S.*                                 |
+| 17 | 例：负责流程制定、市场、法务→整段S；*Example: responsible for X,Y,Z → S*         | 不拆成S+K+K。 *Do not split into S+K+K.*                                               |
+| 18 | 例：英语+邮件沟通+Excel汇总→L/S/S；*English + email comms + Excel → L/S/S* | “英语”(L)；“邮件沟通”(S)；“用Excel进行数据汇总”(S)。 *All split safely.*                           |
+| 19 | 例：执照(K)+遵守标准(S) 可拆；*Licence(K) + comply(S) split*               | “驾驶执照(英/欧)”(K)；“遵守健康与安全及审计标准”(S)。 *Split by role.*                                 |
+| 20 | 例：沟通协调能力/承压能力→T/T；*Communication/pressure tolerance → T/T*      | 若写成具体动作则S。 *Action phrasing → S.*                                                  |
+| 21 | 工具/语言用于完成任务→S；*Using tools/languages to do → S*                 | “使用Python部署模型”(S)；“以英文撰写报告”→“英语”(L)+“撰写报告”(S)。                                     |
+| 22 | 标准本体=K；按标准执行=S；*Standard entity=K; executing=S*                 | “了解ISO 9001”(K)；“按ISO 9001审核”(S)。 *Map by role.*                                   |
+| 23 | 拆分不得改变原意或致歧义；*Splits must preserve meaning*                     | 拆后“市场”变模糊→不要拆。 *If “market” becomes ambiguous → keep whole.*                       |
+| 24 | 标注顺序：L→S→K/T；*Order: L → S → K/T*                               | 先语言，再职责，再区分知识/软素质。 *Prioritize L, then S, then K/T.*                               |
+| 25 | 自检：无重叠/无嵌套；*Check: no overlap/nesting*                          | 检查相邻跨度边界。 *Verify boundaries.*                                                     |
+| 26 | 自检：禁把职责拆成名词堆；*Check: no noun-scrap splitting*                   | “统筹A、B、C”勿拆成A/B/C。 *Do not split into bare nouns.*                                 |
+| 27 | 自检：防S被误切成K；*Check: avoid turning S into K*                      | 参见例1/2。 *See Ex. 16/17.*                                                           |
+| 28 | 自检：每跨原文连续且未拼接；*Check: contiguous, unfabricated*                 | 需跨越不连续文本时放弃拆分。 *If discontinuous, don’t split.*                                    |
+| 29 | 自检：合规表达判S；*Check: compliance phrasing → S*                      | “按GMP流程质检”→S。 *“Inspect per GMP” → S.*                                             |
+| 30 | 自检：不确定用 L>S>K>T 兜底；*Check: fallback L>S>K>T*                    | “英文会议沟通”→L+S；“学习GMP体系”→K。 *Map consistently.*                                      |
 
-###【请务必同时满足的规则】
-
-1.不嵌套
--不能在一个跨度里面再画另一个跨度。
-2.不重叠
--两个跨度不能有重叠字符。
-3.平面标注
--同一条文本可以画很多跨度。
--每个跨度必须是原文里一段连续的文字，互不包含，互不重叠。
--禁止“复制动词+名词”来人造片段，也禁止把一句职责硬拆成一堆名词碎片。
-
-4.非技能类内容/笼统职责不入内：
--口号、愿景、礼貌语、招聘标题/岗位名称、公司待遇、年龄、班次、薪酬等一律不标；
--“日常X工作/综合性职责/负责相关工作”这类笼统统括不单独成跨度，优先标其后出现的具体操作/对象（如“@@推进里程碑的沟通协调##[S]”“@@报表制作##[S]”）；
--若无具体对象与动作则跳过。
-
-5.最小且语义充分
--跨度要短，但必须能单独读懂是什么要求。
--可以把“能够/较强的/善于/及时地/认真地”这类程度词、壳词去掉。
--不能剪到只剩半截词，读不懂。
-
-6.只有安全拆才拆
--如果一个子片段本身就是一个独立要求，单独拿出来还能读懂、还能稳定贴上 L / S / K / T，不会跑偏，那就把它单独画成一个跨度（安全拆）。
--如果拆开以后会出现“这个名词现在好像变成别的意思/我都不知道该打什么标签了”，那就不要拆，整段作为一个跨度。
-
-7.标签冲突时
--先看语境：它是在说语言要求？职责/要做的事？知识资格？还是软素质？
--还拿不准，就用优先级：L ＞ S ＞ K ＞ T。
-
-【四种标签（ESCO 1.20 对齐口径）】
-K — Knowledge（知识）
-
--“是什么 / 为什么”的知识、规范、标准本体、资格本体。
--例：GMP、食品安全规范、健康与安全及审计标准、驾驶执照（英国/欧盟）、药品监管法规、TCP/IP、机器学习（当它指的是理论领域/技术名词本体）。
--重点：K 是“懂这个体系/标准/资格本身”。
-S — Skills（技能）
--“怎么做 / 怎么做到”的执行能力、职责动作、交付任务。
--例：流程制定、统筹协调资源、推进项目落地、数据汇总、故障诊断、维护、部署、沟通执行。
--使用工具/语言/平台去完成任务也是 S：
-“熟练使用 Excel 进行数据分析”“能用 SQL 抽取数据”“Python 开发/部署模型”“使用 Linux shell 维护系统”“使用 HALCON / VisionPro 进行视觉检测”。
--合规执行也是 S：
-“遵守健康与安全及审计标准”“按 GMP 流程进行质检”“按 ISO 标准开展审核”。
--重点：只要是在‘做事’，就是 S。
-
-###T — Transversal（通用 / 软技能）
-
--通用职业素质/软能力：沟通协调能力、抗压能力、时间管理、学习能力、问题解决、客户导向、安全意识、执行力、责任心等。
--如果它是抽象素质（“具备良好的沟通协调能力”）→ T。
--如果它是日常要做的动作（“沟通协调客户诉求并推进解决”）→ 那是职责 → S。语境优先。
-
-###L — Language（语言）
-
--语言能力、语言等级、考试分数、语言证书：英语 CET-6、TEM、IELTS、TOEFL、日语 N2 / JLPT、普通话等级。
--“以英文进行书面和口头沟通”例：
--语言本身（英文）是 L；
--“沟通”动作本身可以单独标 S。
-
-###【非常关键的例子 — 请按这口径打】
-
-例 1
-“统筹协调产品、市场、运营、商业化团队资源”
-→ 整段画成一个跨度，标 S。
-
-原因：
-
-这句话整体是一个岗位职责（统筹协调这些资源）。
-“产品、市场、运营、商业化团队资源”只是同一职责的对象，不是独立要求。
-如果你硬拆，“市场”“运营”会被当成孤立名词，看起来像 K（领域），标签就漂了。禁止硬拆。
-例 2
-“负责流程制定、市场、法务”
-→ 整段画成一个跨度，标 S。
-
-原因：
-
-语境含义是“负责这些模块/范围”。
-不能拆成“流程制定”(S) + “市场”(K) + “法务”(K)，因为“市场/法务”在原句里也是负责范围（职责的一部分 = S），而不是单纯背景知识 K。
-这种拆会把一个 S 错切成“S+K”，不允许。
-例 3
-“能用英语与海外客户邮件沟通，熟练使用 Excel 进行数据汇总”
-→ 可以拆成多个跨度，只要每段是原文的连续子串，且单独读得懂：
-
-“英语” → L
-“邮件沟通” → S
-“熟练使用 Excel 进行数据汇总” → S
-注意：
-
-“熟练使用 Excel 进行数据汇总”是在说“会用工具把事做出来”→ 这是执行能力，所以是 S。
-在这种语境下，Excel 不是 K，而是 S 的一部分。
-例 4
-“需持有驾驶执照（英国/欧盟）并遵守健康与安全及审计标准”
-→ 这里可以安全拆成两个跨度：
-
-“驾驶执照（英国/欧盟）” → K
-“遵守健康与安全及审计标准” → S
-原因：
-
-“驾驶执照（英国/欧盟）”是资格本身，属于知识/资质要求 → K。
-“遵守健康与安全及审计标准”是在说“按这些标准去执行/遵守它”，是行为责任 → S。
-同一个标准词组（健康与安全及审计标准）在不同语境下可以是 K（标准本体）或 S（按标准执行），语境决定。
-例 5
-“具备较强的沟通协调能力，能够承受工作压力”
-→ 可以拆成两个跨度：
-
-“沟通协调能力” → T
-“承受工作压力” → T
-补充：
-
-如果原句写成“沟通协调客户诉求并推进解决”，那是持续要做的任务 → S，而不是 T。
-###【最后提交前请自检】
-
-我有没有画重叠跨度？（不允许）
-我是不是看到了顿号“、”就把一条职责句子机械拆成一堆名词？（禁止硬拆）
-我有没有把一条整体职责 S 拆碎，导致后半个名词被我打成 K？（这是错的，应该整段标 S）
-我画的每个跨度是不是原文里的连续子串？我没有复制前半动词去补后半名词吧？
-“遵守××标准 / 按××规范执行”我是不是正确打成 S？
-标签拿不准时，我是不是先按语境判断，再用 L＞S＞K＞T 兜底？
